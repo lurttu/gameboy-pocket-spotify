@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+    <title>Svelte app</title>
+
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="stylesheet" href="/global.css" />
+    <link rel="stylesheet" href="/build/bundle.css" />
+
+    <script defer src="/build/bundle.js"></script>
+  </head>
+
+  <body>
+    <script src="https://sdk.scdn.co/spotify-player.js"></script>
+    <script>
+      window.onSpotifyWebPlaybackSDKReady = () => {
+        const token =
+          "BQBwomWQ-yws78s8woshf3GaijmvwaCukuIE8cGqAq8oA76MRvPsPB2gRzDgTMkDyworBgfFJjghuhsydEpylxP2WSKoGlQN2GEpkSms_VVPxeCuFt0on7KNUWdpUEUAIYliXT76pH1naY92HOXBYCaBA_a5ZXmg";
+        window.player = new Spotify.Player({
+          name: "Web Playback SDK Quick Start Player",
+          getOAuthToken: (cb) => {
+            cb(token);
+          },
+        });
+
+        // Error handling
+        player.addListener("initialization_error", ({ message }) => {
+          console.error(message);
+        });
+        player.addListener("authentication_error", ({ message }) => {
+          console.error(message);
+        });
+        player.addListener("account_error", ({ message }) => {
+          console.error(message);
+        });
+        player.addListener("playback_error", ({ message }) => {
+          console.error(message);
+        });
+
+        // Playback status updates
+        player.addListener(
+          "player_state_changed",
+          ({ position, duration, track_window: { current_track } }) => {
+            console.log("Currently Playing", current_track);
+            console.log("Position in Song", position);
+            console.log("Duration of Song", duration);
+          }
+        );
+
+        // Ready
+        player.addListener("ready", ({ device_id }) => {
+          console.log("Ready with Device ID", device_id);
+        });
+
+        // Not Ready
+        player.addListener("not_ready", ({ device_id }) => {
+          console.log("Device ID has gone offline", device_id);
+        });
+
+        // Connect to the player!
+        player.connect();
+      };
+    </script>
+  </body>
+</html>
